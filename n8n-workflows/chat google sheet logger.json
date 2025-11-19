@@ -1,0 +1,144 @@
+{
+  "name": "chat google sheet logger",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1zYl8JANoLlW87mO4qSGlPn44IbISZs3xgSDXrYgo1EM",
+          "mode": "list",
+          "cachedResultName": "test-report file",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zYl8JANoLlW87mO4qSGlPn44IbISZs3xgSDXrYgo1EM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "chatlog",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zYl8JANoLlW87mO4qSGlPn44IbISZs3xgSDXrYgo1EM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user-query": "={{ $json.user_input }}",
+            "bot answer": "={{ $json.bot_response }}",
+            "session-id": "={{ $json.session_id }}",
+            "time": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user-query",
+              "displayName": "user-query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "bot answer",
+              "displayName": "bot answer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "session-id",
+              "displayName": "session-id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "time",
+              "displayName": "time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        16
+      ],
+      "id": "47a5b37a-8156-4fdb-9fd9-1c8e2f99dcd4",
+      "name": "chat-Logs",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Ed50FVZjJ7k0GKIR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        16
+      ],
+      "id": "7d340bcf-edd5-4ad0-8f95-473dde533528",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {
+          "user_input": "hii",
+          "session_id": "8f1fd83942124f01a0a853146822bcd0",
+          "bot_response": "Hello! 👋 How can I assist you today?",
+          "time": "2025-11-13T17:23:24.138-05:00"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "chat-Logs": {
+      "main": [
+        []
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "chat-Logs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f74a6027-5d9a-4f3f-9b36-8e7f0dd77fac",
+  "meta": {
+    "instanceId": "1de267c5b216e1fe48421e56c3cd3dc216f352e97f16b6d8838d11a8baddf4ad"
+  },
+  "id": "p0wGB8F3NvAbOnvU",
+  "tags": []
+}

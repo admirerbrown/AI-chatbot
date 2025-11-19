@@ -1,0 +1,166 @@
+{
+  "name": "chromadb-vector-RAG-Local-pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1dTMnfOST6aeO66pWusEyNPTrTs9dELTy",
+          "mode": "list",
+          "cachedResultName": "VA knowledge-base",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1dTMnfOST6aeO66pWusEyNPTrTs9dELTy"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        -32
+      ],
+      "id": "b7d05619-6d5d-4619-bb4f-7c4ac0677e74",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "fzOyAx4QZ2cqX6U7",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -160,
+        -32
+      ],
+      "id": "e905ba15-130d-44b9-9c9b-7155d715367f",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "fzOyAx4QZ2cqX6U7",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/home/admirer/rag_pipeline/knowledge-base/{{ $binary.data.fileName }}",
+        "options": {
+          "append": false
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        16,
+        -32
+      ],
+      "id": "e484af63-09d4-4e48-990c-c647727ac623",
+      "name": "Save knowledge to local directory"
+    },
+    {
+      "parameters": {
+        "command": "=bash -c \"cd /home/admirer/rag_pipeline && source source/bin/activate && python add_data.py '{{ $json.name }}'\""
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        208,
+        -32
+      ],
+      "id": "90d4e2ce-0c9d-4bcd-b807-22cfb8755cf8",
+      "name": "local Chroma-vector-db"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const parsed = JSON.parse(item.json.stdout);\n  return { json: parsed };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        -32
+      ],
+      "id": "c1456720-8dc4-49c6-8f7b-b0c120b0fd32",
+      "name": "parse-stdout-res"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Save knowledge to local directory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save knowledge to local directory": {
+      "main": [
+        [
+          {
+            "node": "local Chroma-vector-db",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "local Chroma-vector-db": {
+      "main": [
+        [
+          {
+            "node": "parse-stdout-res",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5bc0bf97-abad-4242-8802-95d78fac139d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1de267c5b216e1fe48421e56c3cd3dc216f352e97f16b6d8838d11a8baddf4ad"
+  },
+  "id": "k8t3FJCLCMt6UOp3",
+  "tags": []
+}

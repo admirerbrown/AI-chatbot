@@ -1,0 +1,236 @@
+{
+  "name": "magnify-chatbot",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "webhook",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        -16
+      ],
+      "id": "bdda7066-1d89-419d-ae65-6b8a95a16138",
+      "name": "When chat message received",
+      "webhookId": "126f8cd5-6199-4252-a15a-48b0f317c3aa"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are Candice, a friendly and helpful customer support assistant for Magnify.\nYour responsibility is to assist users with questions about our business.\nAlways use the search_company_documents tool to provide relevant information.\nif the answer is found your reply should be brief and on point.Always format your response properly for the user and don't provide the full document.\nIf the answer is not found, respond:\n\"I will forward your enquiry to the support team. In the meantime, please feel free to ask another question. Thank you!\"\nKeep your tone warm, professional, and encouraging.",
+          "maxIterations": 4
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        688,
+        -16
+      ],
+      "id": "9bdc2dc4-d837-4c9f-ad5f-789968690f43",
+      "name": "AI Agent1",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        544,
+        208
+      ],
+      "id": "f885ecbe-130a-46c1-99c9-c4cd2b2a4558",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "BoXjiShuwZ8Tz8b3",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        704,
+        208
+      ],
+      "id": "fffbb969-2aed-4508-8b96-41c71c0603b7",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "executeOnce": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Execute_Once', ``, 'boolean') }}",
+        "command": "=/home/admirer/rag_pipeline/source/bin/python /home/admirer/rag_pipeline/query.py \"{{ $json.query}}\""
+      },
+      "type": "n8n-nodes-base.executeCommandTool",
+      "typeVersion": 1,
+      "position": [
+        864,
+        208
+      ],
+      "id": "9c80dd2a-4c00-4a30-828e-eadda4966afb",
+      "name": "search_company_documents"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c4f4309c-b096-4df8-a043-fe2cc1ca5600",
+              "name": "text",
+              "value": "={{ $json.bot_response }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        192
+      ],
+      "id": "c15f9abf-b7e1-42ee-806f-5b69d74ef3f0",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nconst user_input = $('When chat message received').first().json.chatInput\nconst session_id = $('When chat message received').first().json.sessionId\nconst bot_response = $input.first().json.output\nconst time = $now\n\nconst data = {\n  user_input : $('When chat message received').first().json.chatInput,\n  session_id : $('When chat message received').first().json.sessionId,\n  bot_response : $input.first().json.output,\n  time : $now\n}\n\n return [{ json: data }]\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        -16
+      ],
+      "id": "463ae73f-c145-47eb-b7c8-c89d5381022f",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "p0wGB8F3NvAbOnvU",
+          "mode": "list",
+          "cachedResultName": "My workflow 2"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        -16
+      ],
+      "id": "98a56446-d0fb-48ed-8a3a-91b8f5fa5b20",
+      "name": "chat-logs"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search_company_documents": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "chat-logs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "qSm0YEeLqvRZFYNV"
+  },
+  "versionId": "d4ebed57-b515-4809-a37e-04a071c7e5f5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1de267c5b216e1fe48421e56c3cd3dc216f352e97f16b6d8838d11a8baddf4ad"
+  },
+  "id": "IHcHVyWJLgSexY2i",
+  "tags": []
+}

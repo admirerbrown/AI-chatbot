@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+source/
+.venv/
+
+# Virtualenv in this repo (sensitive / large)
+source/lib/
+source/bin/
+source/include/
+source/share/
+
+# ChromaDB data directory (local, large)
+chroma/
+
+# n8n exports, logs
+n8n/*.json
+logs/
+
+# OS files
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Credentials
+.env
+secrets.json
