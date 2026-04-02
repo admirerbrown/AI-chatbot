@@ -5,9 +5,9 @@
 ![n8n](https://img.shields.io/badge/n8n-Workflow_Automation-EA4B71?style=flat&logo=n8n&logoColor=white)
 ![LangChain](https://img.shields.io/badge/LangChain-RAG-1C3C3C?style=flat)
 
-A client needed a lightweight chatbot embedded into their website that answers customer questions using the company's FAQ and internal documents. They wanted: fast, accurate replies, an easy content ingest workflow for new PDFs, and complete control over the data (self-hosted where possible).
+This project was built in response to a real operational problem observed, where we needed a lightweight chatbot embedded into the website that answers customer questions using the company's FAQ and internal documents. We  wanted: fast, accurate replies, an easy content ingest workflow for new PDFs, and complete control over the data (self-hosted where possible).
 
-This repository contains a pragmatic RAG (retrieval-augmented generation) pipeline built around the following goals — a focused demo I built for a client to add an FAQ-driven AI chatbot to their website:
+This repository contains a pragmatic RAG (retrieval-augmented generation) pipeline built around the following goals — a focused demo I built to add an FAQ-driven AI chatbot to a website:
 
 - Accurate, context-aware answers driven by existing FAQ documents
 - Simple document ingestion that anyone on the content team can use
@@ -125,7 +125,7 @@ Watch the chatbot in action:
 
 ## Results & impact 📊
 
-**Key outcomes delivered to the client:**
+**Key outcomes delivered**
 
 - ⚡ **Response time**: < 2 seconds average for FAQ queries
 - 🎯 **Accuracy**: 90%+ relevant answers using vector similarity search
@@ -140,9 +140,9 @@ Watch the chatbot in action:
 - Real-time semantic search across 10+ document chunks per query
 - Production-ready chatbot delivered in under 4 weeks
 
-## Client outcome & demo status 🎉
+## outcome & demo status 🎉
 
-- Demo accepted: this was a client engagement; the work was accepted and the engagement closed. This repository stores the demo artifacts that powered the chatbot on the client's site.
+- Demo accepted: The work was accepted, and the engagement closed. This repository stores the demo artifacts that powered the chatbot on the client's site.
 
 ## Quick notes ✨
 
